@@ -1,0 +1,53 @@
+﻿<!--<Window x:Class="Test1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Test1"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        --><!--<lvc:CartesianChart Series="{Binding SeriesCollection}" />--><!--
+        <lvc:CartesianChart  Series="{lvc: LineSeries}" />
+        --><!--<lvc:LineSeries  Name="Series1" "></lvc:LineSeries>--><!--
+        
+    </Grid>
+    
+    
+</Window>-->
+
+
+<UserControl x:Class="Geared.Wpf.MultipleSeriesTest.MultipleSeriesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:Test1="clr-namespace:Test1"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <Test1:MainWindow> </Test1:MainWindow>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="lvc:Separator">
+                <Setter Property="Stroke" Value="#69000000"></Setter>
+                <Setter Property="StrokeThickness" Value=".8"></Setter>
+                <Setter Property="StrokeDashArray" Value="2"></Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <lvc:CartesianChart Grid.Row="1" 
+                            DisableAnimations="True"
+                            Series="{Binding Series}" 
+                            DataTooltip="{x:Null}"
+                            Zoom="Xy"/>
+    </Grid>
+</UserControl>
+ 
