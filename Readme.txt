@@ -1,0 +1,1 @@
+this is the first attempt to learn wpf through chosing the graph component suitable for this new HP_FL view in CVDT 
