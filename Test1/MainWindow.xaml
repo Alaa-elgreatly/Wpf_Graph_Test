@@ -8,9 +8,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        --><!--<lvc:CartesianChart Series="{Binding SeriesCollection}" />--><!--
+        -->
+<!--<lvc:CartesianChart Series="{Binding SeriesCollection}" />-->
+<!--
         <lvc:CartesianChart  Series="{lvc: LineSeries}" />
-        --><!--<lvc:LineSeries  Name="Series1" "></lvc:LineSeries>--><!--
+        -->
+<!--<lvc:LineSeries  Name="Series1" "></lvc:LineSeries>-->
+<!--
         
     </Grid>
     
@@ -26,9 +30,9 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:Test1="clr-namespace:Test1"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="410.976" d:DesignWidth="609.878">
     <UserControl.DataContext>
-        <Test1:MainWindow> </Test1:MainWindow>
+        <Test1:MainWindow></Test1:MainWindow>
     </UserControl.DataContext>
     <Grid>
         <Grid.Resources>
@@ -44,10 +48,37 @@
         </Grid.RowDefinitions>
 
         <lvc:CartesianChart Grid.Row="1" 
-                            DisableAnimations="True"
-                            Series="{Binding Series}" 
-                            DataTooltip="{x:Null}"
-                            Zoom="Xy"/>
+                            DisableAnimations="False"
+                                Zoom="None"
+                                
+                      Series="{Binding Series}" 
+                            
+                              >
+
+
+
+
+            <lvc:CartesianChart.Resources>
+                <Style TargetType="lvc:DefaultTooltip">
+                    <Setter Property="Background" Value="DarkOrange"></Setter>
+                    <Setter Property="Foreground" Value="White"></Setter>
+                    <Setter Property="ShowTitle" Value="False"></Setter>
+                    <!--new property-->
+                    <Setter Property="ShowSeries" Value="False"></Setter>
+                    <!--new property-->
+                    <Setter Property="FontSize" Value="12"></Setter>
+                    <Setter Property="FontWeight" Value="DemiBold"></Setter>
+                    <Setter Property="CornerRadius" Value="0"></Setter>
+                    <Setter Property="Width" Value="190"></Setter>
+                    <Setter Property="Height" Value="30"></Setter>
+                    <Setter Property="BorderThickness" Value="0"></Setter>
+                    <Setter Property="ClipToBounds" Value="True">  </Setter>
+                    <Setter Property="IsWrapped" Value="True"> </Setter>
+
+                </Style>
+            </lvc:CartesianChart.Resources>
+
+        </lvc:CartesianChart>
     </Grid>
 </UserControl>
  

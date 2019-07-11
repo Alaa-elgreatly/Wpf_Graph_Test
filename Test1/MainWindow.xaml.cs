@@ -88,6 +88,7 @@
 //}
 
 using System;
+using System.Linq;
 using System.Windows.Media;
 using LiveCharts;
 using LiveCharts;
@@ -98,6 +99,7 @@ using System.Diagnostics;
 using System.Timers;
 using System.Threading;
 using LiveCharts.Configurations;
+using System.Collections.ObjectModel;
 
 namespace Test1
 {
@@ -106,14 +108,19 @@ namespace Test1
         System.Timers.Timer t = new System.Timers.Timer();
         ChartValues<Echo> EchoList;
         ChartValues<double> ThresholdList;
-        static Echo tempo = new Echo() { Amplitude = 10, Distance = 10 };
+        //ChartValues<ObservablePoint> AdjustedThresholds;
+       ChartValues<MyObservablePoint> AdjustedThresholds;
+        subdata sd1;
+        subdata sd2;
+
 
         public MainWindow()
         {
             Series = new SeriesCollection();
 
-           
-            ChartValues<ObservablePoint> AdjustedThresholds;
+            ChartValues<double> AdjustedThreshold2 = new ChartValues<double>() { 1,2,3,4};
+
+            //ChartValues<ObservablePoint> AdjustedThresholds;
             ChartValues<double> SensorThresholds;
 
             //fill chartvalues objects with binded data
@@ -121,23 +128,38 @@ namespace Test1
             
             // map the configuration of Echo to make livechart know how to plot it 
             var mapper = Mappers.Xy<Echo>().X(v => v.Distance).Y(v => v.Amplitude);
+
+            var mapper2 = Mappers.Xy<MyObservablePoint>().X(v => v.X).Y(v => v.Y);
+
+
+            //System.Collections.ObjectModel.ObservableCollection < double > mycoll = new System.Collections.ObjectModel.ObservableCollection<double>();
+
+            
+
             //create new scater series to plot the echos with the mapping information
             ScatterSeries ss = new ScatterSeries(mapper);
             //give the mapped series the list of echos to plot
             ss.Values = EchoList;
+            ss.LabelPoint = (point =>    $"  X={(point.X).ToString()}, Y={(point.Y).ToString()}" )  ;
+
+
+
 
             //create new line series to plot the adjusted thresholds 
-            LineSeries ls = new LineSeries();
-            ls.Values = AdjustedThresholds;
-
+            LineSeries ls = new LineSeries(mapper2);
+            //ls.LabelPoint = (point => ((int)point.Y).ToString());
             
+            ls.Values = AdjustedThresholds;
+            ls.LabelPoint = (point => $"  X={(point.X).ToString()}, Y={(point.Y).ToString()}");
+
+
 
             Series.Add(ss);
             Series.Add(ls);
 
 
             t.Elapsed += timer_elapsed;
-            t.Interval = 3000;
+            t.Interval = 10000;
             t.Start();
 
             // Thread.Sleep(8000);
@@ -153,10 +175,17 @@ namespace Test1
             //EchoList[1].Amplitude += 5;
             //EchoList[3].Amplitude += 20;
 
-            tempo.Distance += 100;
+            
+            for (int i = 0; i < sd1.Values.Count; i++)
+            {
+                sd1.Values[i]++;
+                MyObservablePoint myob = AdjustedThresholds.FirstOrDefault(point => point.MyThreshold == sd1);
+                myob.OnPropertyChanged("X");
+            }
+            ;
         }
 
-        public void controller(out ChartValues<Echo> Echos, out ChartValues<ObservablePoint> AdjustedThresholds, out ChartValues<double> SensorThresholds)
+        public void controller(out ChartValues<Echo> Echos,  out ChartValues<MyObservablePoint> AdjustedThresholds, out ChartValues<double> SensorThresholds)
         {
 
             #region Declaring variables
@@ -200,12 +229,23 @@ namespace Test1
 
 
             #region Binding adjusted thresholds
-            AdjustedThresholds = new ChartValues<ObservablePoint>();
-            AdjustedThresholds.Add(new ObservablePoint(0, 0));
-            AdjustedThresholds.Add( new ObservablePoint(tempo.Amplitude+100,tempo.Distance+10) );
-            AdjustedThresholds.Add(new ObservablePoint(tempo.Amplitude+150, tempo.Distance+20));
-            AdjustedThresholds.Add(new ObservablePoint(tempo.Amplitude+300, tempo.Distance+30));
+            //AdjustedThresholds = new ChartValues<ObservablePoint>();
+            //AdjustedThresholds.Add(new ObservablePoint(0, 0));
+            //AdjustedThresholds.Add( new ObservablePoint(tempo.Amplitude+100,tempo.Distance+10) );
+            //AdjustedThresholds.Add(new ObservablePoint(tempo.Amplitude+150, tempo.Distance+20));
+            //AdjustedThresholds.Add(new ObservablePoint(tempo.Amplitude+300, tempo.Distance+30));
 
+             sd1 = new subdata("sub1");
+             sd2 = new subdata("sub2");
+            Tuple<subdata, subdata> t1 = new Tuple<subdata, subdata>(sd1, sd2);
+            //AdjustedThresholds = getPointsFromThreshold(t1);
+            AdjustedThresholds = new ChartValues<MyObservablePoint>();
+
+            for (int i = 0; i < sd1.Values.Count; i++)
+            {
+                AdjustedThresholds.Add(new MyObservablePoint(i, sd1));
+
+            }
             #endregion
 
             #region Binding sensor thresholds
@@ -214,6 +254,19 @@ namespace Test1
 
         }
 
+        public ChartValues<ObservablePoint> getPointsFromThreshold(Tuple<subdata, subdata> myTup)
+
+        {
+            ChartValues<ObservablePoint> ths = new ChartValues<ObservablePoint>();
+            ObservablePoint point;
+            for (int i = 0; i < myTup.Item1.Values.Count; i++)
+            {
+                point = new ObservablePoint(myTup.Item1.Values[i], myTup.Item2.Values[i]);
+
+                ths.Add(point);
+            }
+            return (ths.Count > 0) ? ths : null;
+        }
 
         public SeriesCollection Series { get; set; }
     }

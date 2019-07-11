@@ -65,7 +65,11 @@
     </ApplicationDefinition>
     <Compile Include="Echo.cs" />
     <Compile Include="Echo_2.cs" />
+    <Compile Include="HP_FL_Thresholds.cs" />
+    <Compile Include="MyObservablePoint.cs" />
+    <Compile Include="NewSubData.cs" />
     <Compile Include="Signalway.cs" />
+    <Compile Include="subdata.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
